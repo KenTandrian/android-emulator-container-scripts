@@ -9,6 +9,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PropTypes from "prop-types";
 import React from "react";
+import TextField from '@mui/material/TextField'
 import Typography from "@mui/material/Typography";
 import * as firebase from "firebase/app";
 import "firebase/auth";
@@ -54,6 +55,16 @@ class SignIn extends React.Component {
         auth: PropTypes.object.isRequired // Auth service
     };
 
+    loginCredentials = (event) => {
+        event.preventDefault();
+        const data = new FormData(event.currentTarget);
+        const credentials = {
+            email: data.get('email'),
+            password: data.get('password'),
+        };
+        firebase.auth().signInWithEmailAndPassword(credentials.email, credentials.password);
+    }
+
     loginGoogle = () => {
         const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(googleAuthProvider);
@@ -71,6 +82,36 @@ class SignIn extends React.Component {
                             <LockOutlinedIcon />
                         </Avatar>
                         <Typography component="h1" variant="h5">Sign in</Typography>
+                        <Box component="form" onSubmit={this.loginCredentials} noValidate sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                autoComplete="email"
+                                autoFocus
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="contained"
+                                sx={{ mt: 3, mb: 2 }}
+                            >
+                                Sign In
+                            </Button>
+                        </Box>
                         <Box mt={8}>
                             <Button variant="contained" color="primary" onClick={this.loginGoogle} >Sign in with Google</Button>
                         </Box>
